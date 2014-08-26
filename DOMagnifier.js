@@ -1,6 +1,7 @@
 var Magnifier = function (targetId) {
 
     this.paintCroppedImageBound = this.paintCroppedImage.bind(this);
+    this.startBound = this.start.bind(this);
 
     this.box = document.getElementById(targetId);
     this.result = document.createElement('div');
@@ -8,27 +9,39 @@ var Magnifier = function (targetId) {
     this.croppedCanvas = document.createElement('canvas');
     this.result.appendChild(this.croppedCanvas);
     document.body.appendChild(this.result);
-
-    var br = this.box.getBoundingClientRect();
-    this.offsetSize = {
-        top: br.top + window.scrollY,
-        left: br.left + window.scrollX
-    };
 };
 
 Magnifier.prototype = {
     start: function () {
         html2canvas(this.box, {onrendered: this.onGotCanvas.bind(this)});
+        this.resetOffsetValues();
     },
     stop: function(){
-        this.box.removeEventListener('mousemove', this.paintCroppedImageBound);
-        this.result.removeEventListener('mousemove', this.paintCroppedImageBound);
+        this.unregisterEvents();
+        this.cachedCanvas = null;
         this.result.parentElement.removeChild(this.result);
+    },
+    resetOffsetValues: function(){
+        var br = this.box.getBoundingClientRect();
+        this.offsetSize = {
+            top: br.top + window.scrollY,
+            left: br.left + window.scrollX
+        };
     },
     onGotCanvas: function(canvas){
         this.cachedCanvas = canvas;
+        this.unregisterEvents();
+        this.registerEvents();
+    },
+    registerEvents: function(){
         this.box.addEventListener('mousemove', this.paintCroppedImageBound);
         this.result.addEventListener('mousemove', this.paintCroppedImageBound);
+        window.addEventListener('resize', this.startBound);
+    },
+    unregisterEvents: function(){
+        this.box.removeEventListener('mousemove', this.paintCroppedImageBound);
+        this.result.removeEventListener('mousemove', this.paintCroppedImageBound);
+        window.removeEventListener('resize', this.startBound);
     },
     paintCroppedImage: function (event) {
         var top = event.pageY  - 50;
