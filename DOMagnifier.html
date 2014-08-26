@@ -4,7 +4,7 @@
     <title></title>
     <script src="html2canvas.min.js"></script>
     <script src="DOMagnifier.js"></script>
-    <link href="css/magnifier.css" rel="stylesheet">
+    <link href="css/DOMagnifier.css" rel="stylesheet">
     <link href="css/stylesheet.css" rel="stylesheet">
 </head>
 <body onload="new Magnifier('box').start();">
@@ -12,14 +12,46 @@
     <section id="main_content" class="inner">
         <div id="box">
             <h1>DOMagnifier demo page</h1>
+
+            <h2>Setup</h2>
+
             <p>
-            To get things moving all you need is the following:
+                To enable DOMagnifier in a page, add the following to the header section:
             <pre>&lt;script src="DOMagnifier.js"&gt;&lt;/script&gt;</pre>
             <pre>&lt;script src="html2canvas.min.js"&gt;&lt;/script&gt;</pre>
             <pre>&lt;link href="css/magnifier.css" rel="stylesheet"&gt;</pre>
-            <pre>new Magnifier('box').start();</pre>
 
             </p>
+
+            <h2>Usage</h2>
+
+            <h3>Starting</h3>
+
+            <p>To add the actual magnifier, create a new magnifier object, and call start().
+            <pre>new Magnifier('someElementId').start();</pre>
+            <br>
+            Where <b>someElementId</b> is the id of the DOM element you want to enable magnifier for.<br>
+            Once this is done, you'll see a nice looking magnifier over your DOM element.
+            </p>
+
+            <h3>Stopping</h3>
+
+            <p>
+                To remove the magnifier, simply double click the mouse, or call stop() on the magnifier object.
+            <pre>var magnifier = new Magnifier('someElementId').start();</pre>
+            <pre>magnifier.stop();</pre>
+            </p>
+
+            <h3>Additional parameters</h3>
+
+            <h4>Zoom level</h4>
+
+            <p>
+                by default, the zoom level is x2; However, you can pass the magnifier's constructor a second parameter,
+                indicating the zoom level:
+            <pre>new Magnifier('someElementId', 3);</pre>
+            </p>
+
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mollis, nunc quis lacinia interdum, leo
                 mi
@@ -78,7 +110,7 @@
                 Fusce nibh
                 nisi, posuere in elit sit amet, mollis pellentesque massa.
             </p>
-            </div>
+        </div>
     </section>
 </div>
 </body>
