@@ -1,7 +1,7 @@
 DOMagnifier
 =========
 
-DOMagnifier is a small Javascript library that lets the user magnify stuff on the page.
+DOMagnifier is a small Javascript library that lets the user magnify stuff on the page.  
 A fully functional demo can be found [here](DOMagnifier.html).
 
 # Setup
