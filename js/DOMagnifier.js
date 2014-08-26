@@ -1,5 +1,5 @@
 var Magnifier = function (targetId, zoomLevel, ignoreDoubleClick) {
-    this.setZoomLevel(zoomLevel);
+    this.setZoomLevel(zoomLevel || 2);
     this.stopOnDoubleClick(!ignoreDoubleClick);
     this._setupDOM(targetId);
     this._bindFunctions();
@@ -18,7 +18,7 @@ Magnifier.prototype = {
     },
     setZoomLevel: function (zoomLevel) {
         if (typeof zoomLevel === "number" && isFinite(zoomLevel) && zoomLevel % 1 === 0 && zoomLevel > 0 && zoomLevel <= 5) {
-            this.zoomLevel = zoomLevel || 2;
+            this._zoomLevel = zoomLevel || 2;
         }
     },
     stopOnDoubleClick: function (stopOnDoubleClick) {
@@ -26,8 +26,8 @@ Magnifier.prototype = {
     },
     _bindFunctions: function () {
         this._paint_croppedImageBound = this._paint_croppedImage.bind(this);
-        this.startBound = this.start.bind(this);
-        this.stopBound = this.stop.bind(this);
+        this._startBound = this.start.bind(this);
+        this._stopBound = this.stop.bind(this);
     },
     _setupDOM: function (targetId) {
         this._target = document.getElementById(targetId);
@@ -40,7 +40,7 @@ Magnifier.prototype = {
 
     _resetOffsetValues: function () {
         var br = this._target.getBoundingClientRect();
-        this.offsetSize = {
+        this._offsetSize = {
             top: br.top + window.scrollY,
             left: br.left + window.scrollX
         };
@@ -54,17 +54,17 @@ Magnifier.prototype = {
         this._target.addEventListener('mousemove', this._paint_croppedImageBound);
         this._result.addEventListener('mousemove', this._paint_croppedImageBound);
         if (this._stopOnDoubleClick) {
-            this._result.addEventListener('dblclick', this.stopBound);
+            this._result.addEventListener('dblclick', this._stopBound);
         }
-        window.addEventListener('resize', this.startBound);
+        window.addEventListener('resize', this._startBound);
     },
     un_registerEvents: function () {
         this._target.removeEventListener('mousemove', this._paint_croppedImageBound);
         this._result.removeEventListener('mousemove', this._paint_croppedImageBound);
         if (this._stopOnDoubleClick) {
-            this._result.removeEventListener('dblclick', this.stopBound);
+            this._result.removeEventListener('dblclick', this._stopBound);
         }
-        window.removeEventListener('resize', this.startBound);
+        window.removeEventListener('resize', this._startBound);
     },
     _paint_croppedImage: function (event) {
         var top = event.pageY - 50;
@@ -73,8 +73,8 @@ Magnifier.prototype = {
         this._crop(this._cachedCanvas, {
             width: 100,
             height: 100,
-            top: top - this.offsetSize.top + 25,
-            left: left - this.offsetSize.left + 25
+            top: top - this._offsetSize.top + 25,
+            left: left - this._offsetSize.left + 25
         });
         this._result.style.top = top + "px";
         this._result.style.left = left + "px";
@@ -86,7 +86,7 @@ Magnifier.prototype = {
         var y2 = Math.min(canvas.height, Math.max(1, bounds.top + bounds.height));
         var width = this._croppedCanvas.width = x2 - x1;
         var height = this._croppedCanvas.height = y2 - y1;
-        this._croppedCanvas.getContext("2d").scale(this.zoomLevel, this.zoomLevel);
+        this._croppedCanvas.getContext("2d").scale(this._zoomLevel, this._zoomLevel);
         this._croppedCanvas.getContext("2d").drawImage(canvas, x1, y1, width, height, 0, 0, width, height);
     }
 };
