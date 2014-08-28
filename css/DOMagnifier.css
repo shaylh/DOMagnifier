@@ -14,6 +14,6 @@ div.magnifier {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#ffffff',GradientType=1 ); /* ie6-9 */
 }
 
-canvas {
+canvas:not(.debug) {
     border-radius: 50%;
 }

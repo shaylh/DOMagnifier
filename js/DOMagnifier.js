@@ -12,7 +12,7 @@ Magnifier.prototype = {
         return this;
     },
     stop: function () {
-        this.un_registerEvents();
+        this._unregisterEvents();
         this._cachedCanvas = null;
         this._result.parentElement.removeChild(this._result);
     },
@@ -47,8 +47,12 @@ Magnifier.prototype = {
     },
     _onGotCanvas: function (canvas) {
         this._cachedCanvas = canvas;
-        this.un_registerEvents();
+        this._unregisterEvents();
         this._registerEvents();
+        if(location.href.indexOf('?debug') > -1){
+            canvas.className = 'debug';
+            document.body.appendChild(canvas);
+        }
     },
     _registerEvents: function () {
         this._target.addEventListener('mousemove', this._paint_croppedImageBound);
@@ -58,7 +62,7 @@ Magnifier.prototype = {
         }
         window.addEventListener('resize', this._startBound);
     },
-    un_registerEvents: function () {
+    _unregisterEvents: function () {
         this._target.removeEventListener('mousemove', this._paint_croppedImageBound);
         this._result.removeEventListener('mousemove', this._paint_croppedImageBound);
         if (this._stopOnDoubleClick) {
