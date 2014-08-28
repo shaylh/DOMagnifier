@@ -6,8 +6,15 @@
     <script src="js/DOMagnifier.js"></script>
     <link href="css/DOMagnifier.css" rel="stylesheet">
     <link href="css/stylesheet.css" rel="stylesheet">
+    <script type="text/javascript">
+
+        window.onload = function(){
+            window.magnifier = new Magnifier('box').start();
+        }
+
+    </script>
 </head>
-<body onload="window.magnifier = new Magnifier('box').start();">
+<body>
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
         <div id="box">
