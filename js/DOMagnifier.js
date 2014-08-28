@@ -1,4 +1,5 @@
 var Magnifier = function (targetId, zoomLevel, ignoreDoubleClick) {
+    this._debug = location.href.indexOf('?debug') > -1;
     this.setZoomLevel(zoomLevel || 2);
     this.stopOnDoubleClick(!ignoreDoubleClick);
     this._setupDOM(targetId);
@@ -7,7 +8,7 @@ var Magnifier = function (targetId, zoomLevel, ignoreDoubleClick) {
 
 Magnifier.prototype = {
     start: function () {
-        html2canvas(this._target, {onrendered: this._onGotCanvas.bind(this)});
+        html2canvas(this._target, {onrendered: this._onGotCanvas.bind(this), logging: this._debug});
         this._resetOffsetValues();
         return this;
     },
@@ -25,7 +26,7 @@ Magnifier.prototype = {
         this._stopOnDoubleClick = stopOnDoubleClick;
     },
     _bindFunctions: function () {
-        this._paint_croppedImageBound = this._paint_croppedImage.bind(this);
+        this._paintCroppedImageBound = this._paintCroppedImage.bind(this);
         this._startBound = this.start.bind(this);
         this._stopBound = this.stop.bind(this);
     },
@@ -49,28 +50,28 @@ Magnifier.prototype = {
         this._cachedCanvas = canvas;
         this._unregisterEvents();
         this._registerEvents();
-        if(location.href.indexOf('?debug') > -1){
+        if(this._debug){
             canvas.className = 'debug';
             document.body.appendChild(canvas);
         }
     },
     _registerEvents: function () {
-        this._target.addEventListener('mousemove', this._paint_croppedImageBound);
-        this._result.addEventListener('mousemove', this._paint_croppedImageBound);
+        this._target.addEventListener('mousemove', this._paintCroppedImageBound);
+        this._result.addEventListener('mousemove', this._paintCroppedImageBound);
         if (this._stopOnDoubleClick) {
             this._result.addEventListener('dblclick', this._stopBound);
         }
         window.addEventListener('resize', this._startBound);
     },
     _unregisterEvents: function () {
-        this._target.removeEventListener('mousemove', this._paint_croppedImageBound);
-        this._result.removeEventListener('mousemove', this._paint_croppedImageBound);
+        this._target.removeEventListener('mousemove', this._paintCroppedImageBound);
+        this._result.removeEventListener('mousemove', this._paintCroppedImageBound);
         if (this._stopOnDoubleClick) {
             this._result.removeEventListener('dblclick', this._stopBound);
         }
         window.removeEventListener('resize', this._startBound);
     },
-    _paint_croppedImage: function (event) {
+    _paintCroppedImage: function (event) {
         var top = event.pageY - 50;
         var left = event.pageX - 50;
 
