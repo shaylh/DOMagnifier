@@ -42,8 +42,8 @@ Magnifier.prototype = {
     _resetOffsetValues: function () {
         var br = this._target.getBoundingClientRect();
         this._offsetSize = {
-            top: br.top + window.scrollY,
-            left: br.left + window.scrollX
+            top: br.top + window.pageYOffset,
+            left: br.left + window.pageXOffset
         };
     },
     _onGotCanvas: function (canvas) {
